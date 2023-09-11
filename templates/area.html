@@ -1,0 +1,663 @@
+<!doctype html>
+<html lang="en">
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+<title>CAP - 공통 경보 프로토콜</title>
+
+<!-- CSS -->
+<!-- Bootstrap core CSS -->
+<link href="bootstrap.min.css" rel="stylesheet">
+<!-- Custom styles for this template -->
+<link href="cover.css" rel="stylesheet">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Leaflet -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+
+<!-- Title icon -> 같은 공간 내의 img 폴더의 이미지 파일 -->
+<link rel="icon" href="./lib/images/capLogo.jpg" sizes="397X118">
+
+<!-- Calendar -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+<link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css" />
+
+
+<style>
+    .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+            font-size: 3.5rem;
+        }
+    }
+</style>
+    <!-- The latest Leaflet Draw Documentation is available at 
+        http://leaflet.github.io/Leaflet.draw/docs/leaflet-draw-latest.html
+        include Leaflet Draw files -->
+    <script src="./lib/js/Leaflet.draw.js"></script>
+    <script src="./lib/js/Leaflet.Draw.Event.js"></script>
+    <link rel="stylesheet" href="./lib/css/leaflet.draw.css" />
+    <script src="./lib/js/Toolbar.js"></script>
+    <script src="./lib/js/Tooltip.js"></script>
+    <script src="./lib/js/GeometryUtil.js"></script>
+    <script src="./lib/js/LatLngUtil.js"></script>
+    <script src="./lib/js/LineUtil.Intersect.js"></script>
+    <script src="./lib/js/Polygon.Intersect.js"></script>
+    <script src="./lib/js/Polyline.Intersect.js"></script>
+    <script src="./lib/js/TouchEvents.js"></script>
+    <script src="./lib/js/DrawToolbar.js"></script>
+    <script src="./lib/js/Draw.Feature.js"></script>
+    <script src="./lib/js/Draw.SimpleShape.js"></script>
+    <script src="./lib/js/Draw.Polyline.js"></script>
+    <script src="./lib/js/Draw.Marker.js"></script>
+    <script src="./lib/js/Draw.Circle.js"></script>
+    <script src="./lib/js/Draw.CircleMarker.js"></script>
+    <script src="./lib/js/Draw.Polygon.js"></script>
+    <script src="./lib/js/Draw.Rectangle.js"></script>
+    <script src="./lib/js/EditToolbar.js"></script>
+    <script src="./lib/js/EditToolbar.Edit.js"></script>
+    <script src="./lib/js/EditToolbar.Delete.js"></script>
+    <script src="./lib/js/Control.Draw.js"></script>
+    <script src="./lib/js/Edit.Poly.js"></script>
+    <script src="./lib/js/Edit.SimpleShape.js"></script>
+    <script src="./lib/js/Edit.Rectangle.js"></script>
+    <script src="./lib/js/Edit.Marker.js"></script>
+    <script src="./lib/js/Edit.CircleMarker.js"></script>
+    <script src="./lib/js/Edit.Circle.js"></script>
+    <!-- include CAP drawing and utilities for circles and polygons -->
+    <script src="./lib/js/shapeDraw.js"></script>
+    <script src="./lib/js/shapeUtils.js"></script>
+</head>
+
+<!-- body 레이아웃 -->
+
+<body onLoad="javascript:initialize();">
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <header class="masthead mb-auto">
+            <div class="inner">
+                <nav class="nav nav-masthead justify-content-center">
+                    <a class="nav-link" href="index.html">Home</a>
+                    <a class="nav-link" href="header.html">Header</a>
+                    <a class="nav-link" href="info.html">Info</a>
+                    <a class="nav-link active" href="area.html">Area</a>
+                    <a class="nav-link" href="resource.html" tabindex="-1" aria-disabled="true">Resource</a>
+                </nav>
+            </div>
+        </header>
+
+        <main role="main" class="inner cover">
+            <form name="capForm" class="a" action="/send" method="POST">
+                <p style="color:red">* 표시는 필수 사항임을 의미합니다.</p>
+                <div class="form-group">
+                    <label class="field_label" for="areaDesc">지역명(areaDesc)<span style="color:red">*</span></label>
+                    <textarea name="areaDesc" id="areaDesc" class="form-control" data-mini="true"
+                        placeholder="South Central San Bernardino, Western Riverside, and North Central San Diego Counties, Southern California"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="field_label" for="capPolygon">다각형(polygon)</label>
+                    <input onchange="makeXML();" type="text" name="capPolygon" id="capPolygon" class="form-control" value=""
+                        placeholder="38.47,-120.14 38.34,-119.95 38.52,-119.74 38.62,-119.89 38.47,-120.14" />
+                </div>
+                <div class="form-group">
+                    <label class="field_label" for="capCircle">원(circle)</label>
+                    <input onchange="makeXML();" type="text" name="capCircle" id="capCircle" class="form-control" value=""
+                        placeholder="중심, 반지름" />
+                </div>
+                <fieldset name="geocode_information" data-role="controlgroup" data-type="horizontal" data-mini="true">
+                    <legend>지역코드(geocode)</legend>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="field_label" for="geocodeValueName">데이터이름(valueName)</label>
+                            <input type="text" name="geocodeValueName" id="geocodeValueName" class="form-control" value=""
+                                placeholder="SAME" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="field_label" for="geocodeValue">데이터값(value)</label>
+                            <input type="text" name="geocodeValue" id="geocodeValue" class="form-control" value=""
+                                placeholder="006003" />
+                        </div>
+                    </div>
+                </fieldset>
+            
+                <fieldset name="altitude_information" data-role="controlgroup" data-type="horizontal" data-mini="true">
+                    <legend>고도(altitude)</legend>
+                    <div class="row">
+                        <div class="form-group col-md-6">
+                            <label class="field_label" for="altitude">고도(altitude)</label>
+                            <input type="text" name="altitude" id="altitude" class="form-control" value="" placeholder="" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label class="field_label" for="ceiling">최고고도(ceiling)</label>
+                            <input type="text" name="ceiling" id="ceiling" class="form-control" value="" placeholder="" />
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="form-group">
+                    <label class="field_label" for="file_name">파일 이름(file_name)<span style="color:red">*</span>:
+                        <small>xml로 저장할 때 파일의 이름</small>
+                    </label>
+                    <input type="text" name="file_name" id="file_name" class="form-control" value="" placeholder="filename" />
+                </div>
+                <div id="map_canvas" style="width: 600px; height: 400px">
+                    <div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(-72px, 56.8px, 0px);">
+                        <div class="leaflet-layer" style="z-index: 2; opacity: 1;">
+                            <div class="leaflet-tile-container leaflet-zoom-animated"
+                                style="z-index: 17; transform: translate3d(338px, 57px, 0px) scale(0.5);"></div>
+                            <div class="leaflet-tile-container leaflet-zoom-animated"
+                                style="z-index: 18; transform: translate3d(242px, -5px, 0px) scale(1);">
+                                <img alt="" role="presentation"
+                                    src="https://www.google.com/maps/vt?lyrs=s@189&amp;gl=cn&amp;x=26&amp;y=12&amp;z=5"
+                                    class="leaflet-tile leaflet-tile-loaded"
+                                    style="width: 256px; height: 256px; transform: translate3d(-185px, -5px, 0px); opacity: 1;">
+                                <img alt role="presentation"
+                                    src="https://www.google.com/maps/vt?lyrs=s@189&amp;gl=cn&amp;x=27&amp;y=12&amp;z=5"
+                                    class="leaflet-tile leaflet-tile-loaded"
+                                    style="width: 256px; height: 256px; transform: translate3d(71px, -5px, 0px); opacity: 1;">
+                                <img alt role="presentation"
+                                    src="https://www.google.com/maps/vt?lyrs=s@189&amp;gl=cn&amp;x=26&amp;y=13&amp;z=5"
+                                    class="leaflet-tile leaflet-tile-loaded"
+                                    style="width: 256px; height: 256px; transform: translate3d(-185px, 251px, 0px); opacity: 1;">
+                                <img alt role="presentation"
+                                    src="https://www.google.com/maps/vt?lyrs=s@189&amp;gl=cn&amp;x=27&amp;y=13&amp;z=5"
+                                    class="leaflet-tile leaflet-tile-loaded"
+                                    style="width: 256px; height: 256px; transform: translate3d(71px, 251px, 0px); opacity: 1;">
+                                <img alt role="presentation"
+                                    src="https://www.google.com/maps/vt?lyrs=s@189&amp;gl=cn&amp;x=27&amp;y=11&amp;z=5"
+                                    class="leaflet-tile leaflet-tile-loaded"
+                                    style="width: 256px; height: 256px; transform: translate3d(71px, -261px, 0px); opacity: 1;">
+                                <img alt role="presentation"
+                                    src="https://www.google.com/maps/vt?lyrs=s@189&amp;gl=cn&amp;x=28&amp;y=12&amp;z=5"
+                                    class="leaflet-tile leaflet-tile-loaded"
+                                    style="width: 256px; height: 256px; transform: translate3d(327px, -5px, 0px); opacity: 1;">
+                                <img alt role="presentation"
+                                    src="https://www.google.com/maps/vt?lyrs=s@189&amp;gl=cn&amp;x=26&amp;y=11&amp;z=5"
+                                    class="leaflet-tile leaflet-tile-loaded"
+                                    style="width: 256px; height: 256px; transform: translate3d(-185px, -261px, 0px); opacity: 1;">
+                                <img alt role="presentation"
+                                    src="https://www.google.com/maps/vt?lyrs=s@189&amp;gl=cn&amp;x=28&amp;y=11&amp;z=5"
+                                    class="leaflet-tile leaflet-tile-loaded"
+                                    style="width: 256px; height: 256px; transform: translate3d(327px, -261px, 0px); opacity: 1;">
+                                <img alt role="presentation"
+                                    src="https://www.google.com/maps/vt?lyrs=s@189&amp;gl=cn&amp;x=28&amp;y=13&amp;z=5"
+                                    class="leaflet-tile leaflet-tile-loaded"
+                                    style="width: 256px; height: 256px; transform: translate3d(327px, 251px, 0px); opacity: 1;">
+                            </div>
+                        </div>
+                        <div class="leaflet-layer " style="z-index: 3; opacity: 1;">
+                            <div class="leaflet-tile-container leaflet-zoom-animated"
+                                style="z-index: 17; transform: translate3d(338px, 57px, 0px) scale(0.5);"></div>
+                            <div class="leaflet-tile-container leaflet-zoom-animated"
+                                style="z-index: 18; transform: translate3d(242px, -5px, 0px) scale(1);">
+                                <img alt role="presentation" src="http://c.tile.openstreetmap.org/5/26/12.png"
+                                    class="leaflet-tile leaflet-tile-loaded"
+                                    style="width: 256px; height: 256px; transform: translate3d(-185px, -5px, 0px); opacity: 1;">
+                                <img alt role="presentation" src="http://a.tile.openstreetmap.org/5/27/12.png"
+                                    class="leaflet-tile leaflet-tile-loaded"
+                                    style="width: 256px; height: 256px; transform: translate3d(71px, -5px, 0px); opacity: 1;">
+                                <img alt role="presentation" src="http://a.tile.openstreetmap.org/5/26/13.png"
+                                    class="leaflet-tile leaflet-tile-loaded"
+                                    style="width: 256px; height: 256px; transform: translate3d(-185px, 251px, 0px); opacity: 1;">
+                                <img alt role="presentation" src="http://b.tile.openstreetmap.org/5/27/13.png"
+                                    class="leaflet-tile leaflet-tile-loaded"
+                                    style="width: 256px; height: 256px; transform: translate3d(71px, 251px, 0px); opacity: 1;">
+                                <img alt role="presentation" src="http://c.tile.openstreetmap.org/5/27/11.png"
+                                    class="leaflet-tile leaflet-tile-loaded"
+                                    style="width: 256px; height: 256px; transform: translate3d(71px, -261px, 0px); opacity: 1;">
+                                <img alt role="presentation" src="http://b.tile.openstreetmap.org/5/28/12.png"
+                                    class="leaflet-tile leaflet-tile-loaded"
+                                    style="width: 256px; height: 256px; transform: translate3d(327px, -5px, 0px); opacity: 1;">
+                                <img alt role="presentation" src="http://b.tile.openstreetmap.org/5/26/11.png"
+                                    class="leaflet-tile leaflet-tile-loaded"
+                                    style="width: 256px; height: 256px; transform: translate3d(-185px, -261px, 0px); opacity: 1;">
+                                <img alt role="presentation" src="http://a.tile.openstreetmap.org/5/28/11.png"
+                                    class="leaflet-tile leaflet-tile-loaded"
+                                    style="width: 256px; height: 256px; transform: translate3d(327px, -261px, 0px); opacity: 1;">
+                                <img alt role="presentation" src="http://c.tile.openstreetmap.org/5/28/13.png"
+                                    class="leaflet-tile leaflet-tile-loaded"
+                                    style="width: 256px; height: 256px; transform: translate3d(327px, 251px, 0px); opacity: 1;">
+                            </div>
+                        </div>
+                        <div class="leaflet-pane leaflet-shadow-pane"></div>
+                        <div class="leaflet-pane leaflet-overlay-pane">
+                            <div class="leaflet-draw-guides"></div>
+                            <svg pointer-events="none" class="leaflet-zoom-animated" width="600" height="600"
+                                viewBox="22 -107 600 600" style="transform: translate3d(22px, -107px, 0px);">
+                                <g></g>
+                            </svg>
+                        </div>
+                        <div class="leaflet-pane leaflet-marker-pane"></div>
+                        <div class="leaflet-pane leaflet-tooltip-pane"></div>
+                        <div class="leaflet-pane leaflet-popup-pane"></div>
+                        <div class="leaflet-proxy leaflet-zoom-animated"
+                            style="transform: translate3d(6921px, 3275.2px, 0px) scale(16);">
+                        </div>
+                    </div>
+                    <div class="leaflet-control-container">
+                        <div class="leaflet-top leaflet-left">
+                            <div class="leaflet-control-zoom leaflet-bar leaflet-control">
+                                <a class="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in">+</a>
+                                <a class="leaflet-control-zoom-out" href="#" title="Zoom out" role="button"
+                                    aria-label="Zoom out">−</a>
+                            </div>
+                            <div class="leaflet-draw leaflet-control">
+                                <div class="leaflet-draw-section">
+                                    <div class="leaflet-draw-toolbar leaflet-bar leaflet-draw-toolbar-top">
+                                        <a class="leaflet-draw-draw-polygon" href="#" title="Draw a polygon">
+                                            <span class="sr-only">Draw a polygon</span>
+                                        </a>
+                                        <a class="leaflet-draw-draw-rectangle" href="#" title="Draw a rectangle">
+                                            <span class="sr-only">Draw a rectangle</span>
+                                        </a>
+                                        <a class="leaflet-draw-draw-circle" href="#" title="Draw a circle">
+                                            <span class="sr-only">Draw a circle</span>
+                                        </a>
+                                    </div>
+                                    <ul class="leaflet-draw-actions"></ul>
+                                </div>
+                                <div class="leaflet-draw-section">
+                                    <div class="leaflet-draw-toolbar leaflet-bar">
+                                        <a class="leaflet-draw-edit-edit leaflet-disabled" href="#" title="No layers to edit">
+                                            <span class="sr-only">Edit layers</span>
+                                        </a>
+                                        <a class="leaflet-draw-edit-remove leaflet-disabled" href="#" title="No layers to delete">
+                                            <span class="sr-only">Delete layers</span>
+                                        </a>
+                                    </div>
+                                    <ul class="leaflet-draw-actions"></ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="leaflet-top leaflet-right"></div>
+                        <div class="leaflet-bottom leaflet-left">
+                            <div class="leaflet-control-layers leaflet-control-layers-expanded leaflet-control"
+                                aria-haspopup="true">
+                                <a class="leaflet-control-layers-toggle" href="#" title="Layers"></a>
+                                <form class="leaflet-control-layers-list">
+                                    <div class="leaflet-control-layers-base">
+                                        <label>
+                                            <div>
+                                                <input type="radio" class="leaflet-control-layers-selector"
+                                                    name="leaflet-base-layers">
+                                                <span> ESRI</span>
+                                            </div>
+                                        </label>
+                                        <label>
+                                            <div>
+                                                <input type="radio" class="leaflet-control-layers-selector"
+                                                    name="leaflet-base-layers" checked="checked">
+                                                <span> Google</span>
+                                            </div>
+                                        </label>
+                                        <label>
+                                            <div>
+                                                <input type="radio" class="leaflet-control-layers-selector"
+                                                    name="leaflet-base-layers" checked="checked">
+                                                <span> OSM</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                    <div class="leaflet-control-layers-separator"></div>
+                                    <div class="leaflet-control-layers-overlays">
+                                        <label>
+                                            <div>
+                                                <input type="checkbox" class="leaflet-control-layers-selector" checked="">
+                                                <span> drawlayer</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="leaflet-bottom leaflet-right">
+                            <div class="leaflet-control-attribution leaflet-control">Google, © <a
+                                    href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors</div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <a class="btn btn-primary" href="http://localhost:5501/info.html" role="button">Previous</a>
+                <a class="btn btn-primary" href="http://localhost:5501/resource.html" role="button">Next</a>
+                <input class="btn btn-primary" type="submit" role="button" value="제출" />
+                <br>
+                <br>
+                <h4>서버에 저장된 CAP 파일 리스트</h4>
+                <!-- <p><small>(클릭하면 지도에 해당 CAP의 지역를 표시합니다.)</small></p>
+                <ul id="file_list">
+                <% for(let i=0; i<file_list.length; i++){ %>
+                <li>
+                <a class="file_list" href="#map_canvas" id=<%= "file_list_" + i %>><%= file_list[i].FILE_NAME %></a>
+                </li>
+                <% } %>
+                </ul> -->
+            </form>
+        </main>
+
+        <footer class="mastfoot mt-auto">
+            <div class="inner">
+                <p class="text-center">COPYRIGHT © 2020 <a href="https://twitter.com/mdo">HONGGI</a> ALL RIGHTS
+                    RESERVED.</p>
+            </div>
+        </footer>
+    </div>
+
+    <script type="text/javascript">
+
+        function cleanXml(stringToXML) {
+            // This function removes markup that is not valid in an XML element, 
+            // commonly occuring when users cut and paste content from an HTML document.
+            if (typeof elementDiv === "undefined") {
+                var elementDiv = document.createElement("div");
+            }
+            elementDiv.innerHTML = stringToXML.trim();
+            return elementDiv.textContent;
+        }
+
+        function makeXML() {
+            // timeNow();
+            // document.capForm.capIdentifier.value = document.capForm.alertingAuthorityOid.value
+            //     + "." + utcTimeOid;
+            // alertXML = "  <cap:identifier>" + document.capForm.capIdentifier.value + "<\/cap:identifier>\n";
+
+            // document.capForm.capSender.value = cleanXml(document.capForm.capSender.value);
+            // if (document.capForm.capSender.value !== "") {
+            //     alertXML = alertXML +
+            //         "  <cap:sender>" + document.capForm.capSender.value + "<\/cap:sender>\n";
+            // }
+
+            // document.capForm.capSent.value = localTime8601;
+            // alertXML = alertXML +
+            //     "  <cap:sent>" + document.capForm.capSent.value + "<\/cap:sent>\n";
+
+            // document.capForm.capStatus.value = cleanXml(document.capForm.capStatus.value);
+            // if (document.capForm.capStatus.value !== "") {
+            //     alertXML = alertXML +
+            //         "  <cap:status>" + document.capForm.capStatus.value + "<\/cap:status>\n";
+            // }
+
+            // document.capForm.capMsgType.value = cleanXml(document.capForm.capMsgType.value);
+            // if (document.capForm.capMsgType.value !== "") {
+            //     alertXML = alertXML +
+            //         "  <cap:msgType>" + document.capForm.capMsgType.value + "<\/cap:msgType>\n";
+            //     if (document.capForm.capMsgType.value == "Alert") {
+            //         document.getElementById('rowReferences').style.display = "none";
+            //         document.getElementById('rowNote').style.display = "none";
+            //     } else {
+            //         document.getElementById('rowReferences').style.display = "";
+            //         document.getElementById('rowNote').style.display = "none";
+            //         if (document.capForm.capMsgType.value == "Cancel" ||
+            //             document.capForm.capMsgType.value == "Error") {
+            //             document.getElementById('rowNote').style.display = "";
+            //         }
+            //     }
+            // }
+
+            // document.capForm.capScope.value = cleanXml(document.capForm.capScope.value);
+            // if (document.capForm.capScope.value !== "") {
+            //     alertXML = alertXML +
+            //         "  <cap:scope>" + document.capForm.capScope.value + "<\/cap:scope>\n";
+            //     if (document.capForm.capScope.value == "Restricted") {
+            //         document.getElementById('rowRestriction').style.display = "";
+            //     } else {
+            //         document.getElementById('rowRestriction').style.display = "none";
+            //     }
+            //     if (document.capForm.capScope.value == "Private") {
+            //         document.getElementById('rowAddresses').style.display = "";
+            //     } else {
+            //         document.getElementById('rowAddresses').style.display = "none";
+            //     }
+            // }
+            // if ((document.capForm.capScope.value == "Restricted") &&
+            //     (document.capForm.capRestriction.value !== "")) {
+            //     alertXML = alertXML +
+            //         "  <cap:restriction>" + document.capForm.capRestriction.value + "<\/cap:restriction>\n";
+            // }
+            // if ((document.capForm.capScope.value == "Private") &&
+            //     (document.capForm.capAddresses.value !== "")) {
+            //     alertXML = alertXML +
+            //         "  <cap:addresses>" + document.capForm.capAddresses.value + "<\/cap:addresses>\n";
+            // }
+
+            // document.capForm.capNote.value = cleanXml(document.capForm.capNote.value);
+            // if (document.capForm.capNote.value !== "") {
+            //     alertXML = alertXML +
+            //         "  <cap:note>" + document.capForm.capNote.value + "<\/cap:note>\n";
+            // }
+
+            // document.capForm.capReferences.value = cleanXml(document.capForm.capReferences.value);
+            // if (document.capForm.capReferences.value !== "") {
+            //     alertXML = alertXML +
+            //         "  <cap:references>" + document.capForm.capReferences.value + "<\/cap:references>\n";
+            // }
+
+            // alertInfo = "";
+
+            // document.capForm.capLanguage.value = cleanXml(document.capForm.capLanguage.value);
+            // if (document.capForm.capLanguage.value !== "") {
+            //     alertInfo = alertInfo +
+            //         "    <cap:language>" + document.capForm.capLanguage.value + "<\/cap:language>\n";
+            // }
+
+            // document.capForm.capCategory.value = cleanXml(document.capForm.capCategory.value);
+            // if (document.capForm.capCategory.value !== "") {
+            //     alertInfo = alertInfo +
+            //         "    <cap:category>" + document.capForm.capCategory.value + "<\/cap:category>\n";
+            // }
+
+            // document.capForm.capEvent.value = cleanXml(document.capForm.capEvent.value);
+            // if (document.capForm.capEvent.value !== "") {
+            //     alertInfo = alertInfo +
+            //         "    <cap:event>" + document.capForm.capEvent.value + "<\/cap:event>\n";
+            // }
+
+            // document.capForm.capResponseType.value = cleanXml(document.capForm.capResponseType.value);
+            // if (document.capForm.capResponseType.value !== "") {
+            //     alertInfo = alertInfo +
+            //         "    <cap:responseType>" + document.capForm.capResponseType.value + "<\/cap:responseType>\n";
+            // }
+
+            // document.capForm.capUrgency.value = cleanXml(document.capForm.capUrgency.value);
+            // if (document.capForm.capUrgency.value !== "") {
+            //     if (document.capForm.capUrgency.value == "Unknown") {
+            //         alert(i18next.t("js-str-3-1"));
+            //         //"Take note: some alerting systems regard 'Unknown' as 'Not Urgent'.");
+            //         document.capForm.capUrgency.focus();
+            //     }
+            //     alertInfo = alertInfo +
+            //         "    <cap:urgency>" + document.capForm.capUrgency.value + "<\/cap:urgency>\n";
+            // }
+
+            // document.capForm.capSeverity.value = cleanXml(document.capForm.capSeverity.value);
+            // if (document.capForm.capSeverity.value !== "") {
+            //     if (document.capForm.capSeverity.value == "Unknown") {
+            //         alert(i18next.t("js-str-3-2"));
+            //         //"Take note: some alerting systems regard 'Unknown' as 'Not Severe'.");
+            //         document.capForm.capSeverity.focus();
+            //     }
+            //     alertInfo = alertInfo +
+            //         "    <cap:severity>" + document.capForm.capSeverity.value + "<\/cap:severity>\n";
+            // }
+
+            // document.capForm.capCertainty.value = cleanXml(document.capForm.capCertainty.value);
+            // if (document.capForm.capCertainty.value !== "") {
+            //     if (document.capForm.capCertainty.value == "Unknown") {
+            //         alert(i18next.t("js-str-3-3"));
+            //         //"Take note: some alerting systems regard 'Unknown' as 'Not Certain'.");
+            //         document.capForm.capCertainty.focus();
+            //     }
+            //     alertInfo = alertInfo +
+            //         "    <cap:certainty>" + document.capForm.capCertainty.value + "<\/cap:certainty>\n";
+            // }
+
+            // document.capForm.capOnset.value = cleanXml(document.capForm.capOnset.value);
+            // if (document.capForm.capOnset.value !== "") {
+            //     if (!dateTimePattern.test(document.capForm.capOnset.value)) {
+            //         alert(i18next.t("js-str-3-4"));
+            //         //"Format requires date as YYYY-MM-DD, T, time as HH:MM:SS, + or -," 
+            //         //"and time zone offset as HH:MM (see 'sent' value for example)"
+            //         document.capForm.capOnset.focus();
+            //         return false;
+            //     }
+            //     alertInfo = alertInfo +
+            //         "    <cap:onset>" + document.capForm.capOnset.value + "<\/cap:onset>\n";
+            // }
+
+            // document.capForm.capExpires.value = cleanXml(document.capForm.capExpires.value);
+            // if (document.capForm.capExpires.value !== "") {
+            //     if (!dateTimePattern.test(document.capForm.capExpires.value)) {
+            //         alert(i18next.t("js-str-3-5"));
+            //         //"Format requires date as YYYY-MM-DD, T, time as HH:MM:SS, + or -, " 
+            //         //"and time zone offset as HH:MM (see 'sent' value for example)"
+            //         document.capForm.capExpires.focus();
+            //         return false;
+            //     }
+            //     alertInfo = alertInfo +
+            //         "    <cap:expires>" + document.capForm.capExpires.value + "<\/cap:expires>\n";
+            // }
+
+            // document.capForm.capSenderName.value = cleanXml(document.capForm.capSenderName.value);
+            // if (document.capForm.capSenderName.value !== "") {
+            //     alertInfo = alertInfo +
+            //         "    <cap:senderName>" + document.capForm.capSenderName.value + "<\/cap:senderName>\n";
+            // }
+
+            // document.capForm.capHeadline.value = cleanXml(document.capForm.capHeadline.value);
+            // if (document.capForm.capHeadline.value !== "") {
+            //     alertInfo = alertInfo +
+            //         "    <cap:headline>" + document.capForm.capHeadline.value + "<\/cap:headline>\n";
+            // }
+
+            // document.capForm.capDescription.value = cleanXml(document.capForm.capDescription.value);
+            // if (document.capForm.capDescription.value !== "") {
+            //     alertInfo = alertInfo +
+            //         "    <cap:description>" + document.capForm.capDescription.value + "<\/cap:description>\n";
+            // }
+
+            // document.capForm.capInstruction.value = cleanXml(document.capForm.capInstruction.value);
+            // if (document.capForm.capInstruction.value !== "") {
+            //     alertInfo = alertInfo +
+            //         "    <cap:instruction>" + document.capForm.capInstruction.value + "<\/cap:instruction>\n";
+            // }
+
+            // document.capForm.capWeb.value = cleanXml(document.capForm.capWeb.value);
+            // if (document.capForm.capWeb.value !== "") {
+            //     alertInfo = alertInfo +
+            //         "    <cap:web>" + document.capForm.capWeb.value + "<\/cap:web>\n";
+            // }
+
+            // document.capForm.capContact.value = cleanXml(document.capForm.capContact.value);
+            // if (document.capForm.capContact.value !== "") {
+            //     alertInfo = alertInfo +
+            //         "    <cap:contact>" + document.capForm.capContact.value + "<\/cap:contact>\n";
+            // }
+
+            // document.capForm.capUri.value = cleanXml(document.capForm.capUri.value);
+            // if (document.capForm.capUri.value !== "") {
+            //     alertInfo = alertInfo +
+            //         "    <cap:resource>\n" +
+            //         "      <cap:resourceDesc>Image file<\/cap:resourceDesc>\n" +
+            //         "      <cap:mimeType>" + document.capForm.capMimeType.value + "<\/cap:mimeType>\n" +
+            //         "      <cap:uri>" + document.capForm.capUri.value + "<\/cap:uri>\n" +
+            //         "    <\/cap:resource>\n";
+            // }
+
+            //AREA
+            // alertArea = "";
+
+            // document.capForm.capAreaDesc.value = cleanXml(document.capForm.capAreaDesc.value);
+            // if (document.capForm.capAreaDesc.value !== "") {
+            //     alertArea = alertArea +
+            //         "      <cap:areaDesc>" + document.capForm.capAreaDesc.value + "<\/cap:areaDesc>\n";
+            // }
+
+            document.capForm.capPolygon.value = cleanXml(document.capForm.capPolygon.value);
+            if (document.capForm.capPolygon.value !== "") {
+                document.capForm.capPolygon.value = polygonGivenByForm(document.capForm.capPolygon.value);
+                // alertArea = alertArea +
+                //    "      <cap:polygon>" + document.capForm.capPolygon.value + "<\/cap:polygon>\n";
+            } else {
+                deleteCapPolygon();
+            }
+
+            document.capForm.capCircle.value = cleanXml(document.capForm.capCircle.value);
+            if (document.capForm.capCircle.value !== "") {
+                document.capForm.capCircle.value = circleGivenByForm(document.capForm.capCircle.value);
+                // alertArea = alertArea +
+                //    "      <cap:circle>" + document.capForm.capCircle.value + "<\/cap:circle>\n";
+            } else {
+                deleteCapCircle();
+            }
+
+            // document.capForm.capGeocode.value = cleanXml(document.capForm.capGeocode.value);
+            // if (document.capForm.capGeocode.value !== "") {
+            //     alertArea = alertArea +
+            //         "      <cap:geocode>" + document.capForm.capGeocode.value + "<\/cap:geocode>\n";
+            // }
+
+            // if (alertArea !== "") {
+            //     alertInfo = alertInfo +
+            //         "    <cap:area>\n" +
+            //         alertArea +
+            //         "    <\/cap:area>\n";
+            // }
+
+            // if (alertInfo !== "") {
+            //     alertXML = alertXML +
+            //         "  <cap:info>\n" +
+            //         alertInfo +
+            //         "  <\/cap:info>\n";
+            // }
+
+            // startXML = '<' + '?xml version="1.0" encoding="UTF-8" ?>\n';
+            // if (document.capForm.capAlertsStylesheetHref.value != "") {
+            //     startXML += '<' + '?xml-stylesheet type="text/xsl" href="' +
+            //         document.capForm.capAlertsStylesheetHref.value + '" ?>\n';
+            // }
+            // startXML += '<cap:alert xmlns:cap="urn:oasis:names:tc:emergency:cap:1.2" >\n';
+            // capXml = startXML + alertXML + "<\/cap:alert>";
+            // document.getElementById("validateCapForm").escapedCapXml.value = capXml;
+            // document.getElementById("saveAlertForm").capXml.value = capXml;
+            // document.getElementById("saveAlertForm").capPathFileName.value =
+            //     document.capForm.capDraftsDirectoryName.value + "/" + utcTimeFilename + ".xml";
+        }
+
+        //최초 지도 상에 표시되는 지점 및 확대정도를 설정
+        function initialize() {
+            // called by the onload event in HTML body element
+            //setTranslation("kr-kma-en")
+            initializeMap('36.371761, 128.164307', '7');
+            //setSelectors();
+            //makeXML();
+        }
+    </script>
+</body>
+
+</html>
