@@ -26,3 +26,21 @@
     - DATABASE 부분은 추후 추가 후 수정 예정
     - STATIC_URL 수정
 - 초기 제작한 프로젝트 git을 통해 연결
+---
+### 23.09.12
+- "acounts" App 내용 수정 : view.py 내에 sign_up 함수 생성 및 login, logout 기존 패키지 함수 삽입
+- `pip install mysqlclient` : MySQL과 django 연동을 위한 패키지(데이터베이서 커넥터) 설치
+- settings.py 내부의 DB 설정 변경
+    - ```
+        DATABASES = {
+            "default": {
+                "ENGINE": "django.db.backends.mysql",
+                "NAME": "cap_pj_db", # 연동할 MySQL SCHEMA 명
+                "USER" : "developer", # DB 접속 계정명
+                "PASSWORD" : "patrick", # DB 접속 비밀번호
+                "HOST" : "localhost", # 실제 DB 주소
+                "PORT" : "3306", # 포트 번호
+            }
+        }
+        ```
+---

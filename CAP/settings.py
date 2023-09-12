@@ -77,11 +77,16 @@ WSGI_APPLICATION = "CAP.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "cap_pj_db", # 연동할 MySQL SCHEMA 명
+        "USER" : "developer", # DB 접속 계정명
+        "PASSWORD" : "patrick", # DB 접속 비밀번호
+        "HOST" : "localhost", # 실제 DB 주소
+        "PORT" : "3306", # 포트 번호
     }
 }
 
+# SECRET_KEY = "기존 settings.py에 있던 SECRETE_KEY를 입력"
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
